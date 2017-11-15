@@ -13,11 +13,11 @@
 	],
     "require": {
 	"php": ">=7.0",
-        "yiisoft/yii2": "*",
+        "yiisoft/yii2": "*"
+	},
 	"autoload": {
 		"psr-4": {
 			"kr0lik\\ltree\\": ""
 		}
 	}
-    }
 }
