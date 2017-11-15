@@ -1,5 +1,5 @@
 <?php
-namespace app\components\Ltree;
+namespace kr0lik\ltree;
 
 use Yii;
 use yii\db\ActiveQuery;
