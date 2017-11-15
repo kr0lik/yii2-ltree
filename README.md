@@ -23,4 +23,5 @@ to the require section of your `composer.json` file.
 Usage
 -----
 Add LtreeActiveRecordTrait to your ActiveRecord
+
 Add LtreeQueryTrait to your ActiveQuery
