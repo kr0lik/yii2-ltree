@@ -3,7 +3,7 @@
 	"description": "Yii2 traits for postgresql ltree module",
 	"type": "yii2-extension",
 	"version": "0.1",
-	"keywords": ["yii2","ltree","postgresql"],
+	"keywords": ["yii2","ltree","postgresql","postgres"],
 	"license": "MIT",
 	"support": {
                 "source": "https://github.com/kr0lik/yii2-ltree"
