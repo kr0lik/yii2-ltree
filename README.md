@@ -22,6 +22,6 @@ to the require section of your `composer.json` file.
 
 Usage
 -----
-Add LtreeActiveRecordTrait to your ActiveRecord
+Add \kr0lik\ltree\LtreeActiveRecordTrait to your ActiveRecord
 
-Add LtreeQueryTrait to your ActiveQuery
+Add \kr0lik\ltree\LtreeQueryTrait to your ActiveQuery
