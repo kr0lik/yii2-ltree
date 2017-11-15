@@ -1,5 +1,5 @@
 # yii2-ltree
-Postgres ltree traits for yii2 
+Postgresql ltree traits for yii2 
 
 Installation
 ------------
