@@ -29,9 +29,10 @@ Lenght of each part path is 4, for root path = '0001'.
 
 
 
+
 Add \kr0lik\ltree\LtreeActiveRecordTrait to your ActiveRecord
 
-Functions:
+Available methods:
 
 ```php
 /**
@@ -153,7 +154,7 @@ $model->getTree(['id', 'name'], ['active']);
 
 Add \kr0lik\ltree\LtreeQueryTrait to your ActiveQuery
 
-Functions:
+Available methods:
 
 ```php
 /**
