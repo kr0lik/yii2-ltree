@@ -48,11 +48,10 @@ trait LtreeQueryTrait
 
     /**
      * Get models by $path
+     * If $recursive == true then get all models where path field value starts from $path(with all childrens)
      *
      * @param string $path
      * @param boolean $recursive
-     * If $recursive == true then get all models where path field value starts from $path(with all childrens)
-     * 
      * @return ActiveQuery
      */
     public function byPath($path, $recursive = true)
