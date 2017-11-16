@@ -188,6 +188,8 @@ Model::find()->byPath('0001.0001', false);
  * Join parents
  *
  * @param int $level DEFAULT 0
+ * $level = 0 - get all parents
+ * $level = n - get n levels of parents start from $this level
  * @param string $joinType DEFAULT 'LEFT JOIN'
  * @return ActiveQuery
  */
@@ -197,6 +199,8 @@ Model::find()>joinParents(0, 'LEFT JOIN');
  * Join childrens
  *
  * @param int $level DEFAULT 0
+ * $level = 0 - get all childrens
+ * $level = n - get n levels of childrens start from $this level
  * @param string $joinType DEFAULT 'LEFT JOIN'
  * @return ActiveQuery
  */
