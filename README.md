@@ -64,7 +64,6 @@ $model->isFirstLevel();
  * @param int $level
  * $level = 0 - get all childs
  * $level = n - get n level childs
- *
  * @return ActiveQuery
  */
 $model->getChildrens(0);
@@ -75,7 +74,6 @@ $model->getChildrens(0);
  * @param int $level
  * $level = 0 - get all parents
  * $level = n - get n level parents
- *
  * @return ActiveQuery
  */
 $model->getParents(0);
@@ -145,7 +143,6 @@ $model->before($anotherModel);
  *  'model_attribute2',
  *  'category_attribute3' => function ($category) { return $category->attribute3; }
  * ]
- *
  * @param array $scopes
  * @return array
  */
@@ -185,7 +182,6 @@ Model::find()->root();
  * @param string $path
  * @param boolean $recursive DEFAULT true
  * If $recursive == true then get all models where path field value starts from $path(with all childrens)
- * 
  * @return ActiveQuery
  */
 Model::find()->byPath('0001.0001', false);
@@ -195,7 +191,6 @@ Model::find()->byPath('0001.0001', false);
  *
  * @param int $level DEFAULT 0
  * @param string $joinType DEFAULT 'LEFT JOIN'
- * 
  * @return ActiveQuery
  */
 Model::find()>joinParents(0, 'LEFT JOIN');
@@ -205,7 +200,6 @@ Model::find()>joinParents(0, 'LEFT JOIN');
  *
  * @param int $level DEFAULT 0
  * @param string $joinType DEFAULT 'LEFT JOIN'
- * 
  * @return ActiveQuery
  */
 Model::find()->joinChildrens(0, 'LEFT JOIN');
