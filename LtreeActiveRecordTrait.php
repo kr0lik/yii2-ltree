@@ -341,8 +341,12 @@ trait LtreeActiveRecordTrait
 
     /**
      * Get Tree
-     * Input fields for each category as array:
-     * ['category_attribute1' => 'model_attribute1', 'model_attribute2', 'category_attribute3' => function ($category) { return $category->attribute3; } ]
+     * Example fields to output:
+     * [
+     *  'category_attribute1' => 'model_attribute1', 
+     *  'model_attribute2', 
+     *  'category_attribute3' => function ($category) { return $category->attribute3; } 
+     * ]
      *
      * @param array $fields
      * @return array
