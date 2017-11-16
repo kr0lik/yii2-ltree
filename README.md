@@ -24,9 +24,7 @@ Usage
 -----
 Required fileds in model: id, name, path.
 
-Lenght of each part path is 4, for root path = '0001'.
-
-
+Lenght of each part ltree path is 4, for root path = '0001'.
 
 
 
@@ -79,7 +77,7 @@ $model->getChildrens(0);
 $model->getParents(0);
 
 /**
- * Get Next categories of $model in $this level
+ * Get Next categories of $model in $model level
  *
  * @param int $count
  * @return ActiveQuery
@@ -87,7 +85,7 @@ $model->getParents(0);
 $model->getNext(0);
 
 /**
- * Get Previous categories of $model in $this level
+ * Get Previous categories of $model in $model level
  *
  * @param int $count
  * @return ActiveQuery
