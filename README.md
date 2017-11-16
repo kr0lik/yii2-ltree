@@ -135,7 +135,7 @@ $model->before($anotherModel);
  * Get Tree
  *
  * @param array $fields
- * Fields to output:
+ * Example fields to output:
  * [
  *  'category_attribute1' => 'model_attribute1',
  *  'model_attribute2',
