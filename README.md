@@ -24,7 +24,7 @@ Usage
 -----
 Required fileds in model: id, name, path.
 
-Lenght of each part ltree path is 4, for root path = '0001'.
+Lenght of each part ltree path is 4, root path = '0001'.
 
 
 
