@@ -28,6 +28,7 @@ Lenght of each part path is 4, for root path = '0001'.
 
 
 
+
 Add \kr0lik\ltree\LtreeActiveRecordTrait to your ActiveRecord
 
 Functions:
