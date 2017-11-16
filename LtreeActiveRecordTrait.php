@@ -63,12 +63,13 @@ trait LtreeActiveRecordTrait
      */
     public function getChildrens(int $level = 0): ActiveQuery
     {
+        $tb = self::tableName();
         $query = self::find()
-            ->where(['<@', self::tableName() . ".{$this->pathName}", $this->{$this->pathName}])
-            ->andWhere(['<>', self::tableName() . ".{$this->pathName}", $this->{$this->pathName}]);
+            ->where(['<@', "$tb.{$this->pathName}", $this->{$this->pathName}])
+            ->andWhere(['<>', "$tb.{$this->pathName}", $this->{$this->pathName}]);
 
         if ($level) {
-            $query->andWhere(['<=', 'nlevel(' . self::tableName() . ".{$this->pathName})", $this->level() + $level + 1]);
+            $query->andWhere(['<=', "nlevel($tb.{$this->pathName})", $this->level() + $level + 1]);
         }
 
         return $query;
@@ -85,12 +86,13 @@ trait LtreeActiveRecordTrait
      */
     public function getParents(int $level = 0): ActiveQuery
     {
+        $tb = self::tableName();
         $query = self::find()
-            ->where(['@>', self::tableName() . ".{$this->pathName}", $this->{$this->pathName}])
-            ->andWhere(['<>', self::tableName() . ".{$this->pathName}", $this->{$this->pathName}]);
+            ->where(['@>', "$tb.{$this->pathName}", $this->{$this->pathName}])
+            ->andWhere(['<>', "$tb.{$this->pathName}", $this->{$this->pathName}]);
 
         if ($level) {
-            $query->andWhere(['>=', 'nlevel(' . self::tableName() . ".{$this->pathName})", $this->level() - $level + 1]);
+            $query->andWhere(['>=', "nlevel($tb.{$this->pathName})", $this->level() - $level + 1]);
         }
 
         return $query;
@@ -104,10 +106,11 @@ trait LtreeActiveRecordTrait
      */
     public function getNext(int $count = 0): ActiveQuery
     {
+        $tb = self::tableName();
         return self::find()
-            ->where(['>', self::tableName() . ".{$this->pathName}", $this->{$this->pathName}])
-            ->andWhere(['~', self::tableName() . ".{$this->pathName}", $this->generatePathParent() ? $this->generatePathParent() . '.*' : '*'])
-            ->andWhere(['=', 'nlevel(' . self::tableName() . ".{$this->pathName})", $this->level() + 1])
+            ->where(['>', "$tb.{$this->pathName}", $this->{$this->pathName}])
+            ->andWhere(['~', "$tb.{$this->pathName}", $this->generatePathParent() ? $this->generatePathParent() . '.*' : '*'])
+            ->andWhere(['=', "nlevel($tb.{$this->pathName})", $this->level() + 1])
             ->limit($count)
             ->sorted();
     }
@@ -120,10 +123,11 @@ trait LtreeActiveRecordTrait
      */
     public function getPrevious(int $count = 0): ActiveQuery
     {
+        $tb = self::tableName();
         return self::find()
-            ->where(['<', self::tableName() . ".{$this->pathName}", $this->{$this->pathName}])
-            ->andWhere(['~', self::tableName() . ".{$this->pathName}", $this->generatePathParent() ? $this->generatePathParent() . '.*' : '*'])
-            ->andWhere(['=', 'nlevel(' . self::tableName() . ".{$this->pathName})", $this->level() + 1])
+            ->where(['<', "$tb.{$this->pathName}", $this->{$this->pathName}])
+            ->andWhere(['~', "$tb.{$this->pathName}", $this->generatePathParent() ? $this->generatePathParent() . '.*' : '*'])
+            ->andWhere(['=', "nlevel($tb.{$this->pathName})", $this->level() + 1])
             ->limit($count)
             ->sorted(SORT_DESC);
     }
@@ -404,12 +408,13 @@ trait LtreeActiveRecordTrait
      */
     protected function beforeMoveInOctantUp(bool $include = true): bool
     {
+        $tb = self::tableName();
         $op = $include ? '>=' : '>';
 
         return Yii::$app->db->createCommand(
-            "UPDATE " . self::tableName() . " AS c
+            "UPDATE $tb AS c
             SET {$this->pathName} = subltree(c.{$this->pathName}, 0, nlevel(:path) - 1)||lpad((ltrim(subltree(c.{$this->pathName}, nlevel(:path) - 1, nlevel(:path))::varchar, '0')::int + 1)::varchar, :partLen, '0')||(CASE WHEN nlevel(c.{$this->pathName}) > nlevel(:path) THEN subpath(c.{$this->pathName}, nlevel(:path)) ELSE '' END)
-            FROM (SELECT {$this->pathName} FROM " . self::tableName() . " WHERE {$this->pathName} ~ :lquery AND subltree({$this->pathName}, 0, nlevel(:path)) $op :path ORDER BY {$this->pathName} DESC) AS t
+            FROM (SELECT {$this->pathName} FROM $tb WHERE {$this->pathName} ~ :lquery AND subltree({$this->pathName}, 0, nlevel(:path)) $op :path ORDER BY {$this->pathName} DESC) AS t
             WHERE c.{$this->pathName}=t.{$this->pathName}",
             [
                 'partLen' => $this->pathPartLen,
@@ -427,12 +432,13 @@ trait LtreeActiveRecordTrait
      */
     protected function afterMoveOutOctantDown(bool $include = true): bool
     {
+        $tb = self::tableName();
         $op = $include ? '>=' : '>';
 
         return Yii::$app->db->createCommand(
-            "UPDATE " . self::tableName() . " AS c 
+            "UPDATE $tb AS c 
             SET {$this->pathName} = subltree(c.{$this->pathName}, 0, nlevel(:path)- 1)||lpad((ltrim(subltree(c.{$this->pathName}, nlevel(:path) - 1, nlevel(:path))::varchar, '0')::int - 1)::varchar, :partLen, '0')||(CASE WHEN nlevel(c.{$this->pathName}) > nlevel(:path) THEN subpath(c.{$this->pathName}, nlevel(:path)) ELSE '' END)
-            FROM (SELECT {$this->pathName} FROM " . self::tableName() . " WHERE {$this->pathName} ~ :lquery AND subltree({$this->pathName}, 0, nlevel(:path)) $op :path ORDER BY {$this->pathName} ASC) AS t
+            FROM (SELECT {$this->pathName} FROM $tb WHERE {$this->pathName} ~ :lquery AND subltree({$this->pathName}, 0, nlevel(:path)) $op :path ORDER BY {$this->pathName} ASC) AS t
             WHERE c.{$this->pathName}=t.{$this->pathName}",
             [
                 'partLen' => $this->pathPartLen,
@@ -450,12 +456,14 @@ trait LtreeActiveRecordTrait
      */
     protected function changeStartPartPath(string $path): bool
     {
+        $tb = self::tableName();
+        
         $transaction = Yii::$app->db->beginTransaction();
         try {
             $success = Yii::$app->db->createCommand(
-                "UPDATE " . self::tableName() . " AS c
+                "UPDATE $tb AS c
                 SET {$this->pathName} = :newPath||(CASE WHEN nlevel(c.{$this->pathName}) > nlevel(:parentPath) THEN subpath(c.{$this->pathName}, nlevel(:parentPath)) ELSE '' END)
-                FROM (SELECT {$this->pathName} FROM " . self::tableName() . " WHERE {$this->pathName} ~ :lquery AND {$this->pathName} > :parentPath ORDER BY {$this->pathName}) AS t
+                FROM (SELECT {$this->pathName} FROM $tb WHERE {$this->pathName} ~ :lquery AND {$this->pathName} > :parentPath ORDER BY {$this->pathName}) AS t
                 WHERE c.{$this->pathName}=t.{$this->pathName}",
                 [
                     'newPath' => $path,
