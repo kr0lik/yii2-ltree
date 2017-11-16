@@ -20,8 +20,13 @@ or add
 
 to the require section of your `composer.json` file.
 
-sage
+Usage
 -----
+Required fileds in model: id, name, path.
+
+Lenght of each part path is 4, for root path = '0001'.
+
+
 
 Add \kr0lik\ltree\LtreeActiveRecordTrait to your ActiveRecord
 
