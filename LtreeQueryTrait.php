@@ -33,9 +33,8 @@ trait LtreeQueryTrait
 
     public function joinParents(int $level = 0, string $joinType = 'LEFT JOIN')
     {
-        return $this->joinWith(['parents' => function ($query) use ($level) {
-            $tb = $this->getPrimaryTableName();
-
+        $tb = $this->getPrimaryTableName();
+        return $this->joinWith(['parents' => function ($query) use ($level, $tb) {
             $query->from(['parents' => $tb])
                 ->onCondition(['@>', new Expression("\"parents\".{$this->pathName}"), new Expression("$tb.{$this->pathName}")])
                 ->andOnCondition(['<>', new Expression("\"parents\".{$this->pathName}"), new Expression("$tb.{$this->pathName}")])
@@ -49,9 +48,8 @@ trait LtreeQueryTrait
 
     public function joinChildrens(int $level = 0, string $joinType = 'LEFT JOIN')
     {
-        return $this->joinWith(['childrens' => function ($query) use ($level) {
-            $tb = $this->getPrimaryTableName();
-
+        $tb = $this->getPrimaryTableName();
+        return $this->joinWith(['childrens' => function ($query) use ($level, $tb) {
             $query->from(['childrens' => $tb])
                 ->onCondition(['<@', new Expression("\"childrens\".{$this->pathName}"), new Expression("$tb.{$this->pathName}")])
                 ->andOnCondition(['<>', new Expression("\"childrens\".{$this->pathName}"), new Expression("$tb.{$this->pathName}")])
