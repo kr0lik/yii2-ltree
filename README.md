@@ -173,7 +173,7 @@ Model::find()->notRoot();
 Model::find()->root();
 
 /**
- * Get models equal $path
+ * Get models by $path
  *
  * @param string $path
  * @param boolean $recursive DEFAULT true
@@ -194,7 +194,7 @@ Model::find()->byPath('0001.0001', false);
 Model::find()>joinParents(0, 'LEFT JOIN');
 
 /**
- * Join parents
+ * Join childrens
  *
  * @param int $level DEFAULT 0
  * @param string $joinType DEFAULT 'LEFT JOIN'
