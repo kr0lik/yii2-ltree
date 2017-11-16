@@ -62,6 +62,8 @@ trait LtreeQueryTrait
 
     /**
      * Join parents
+     * $level = 0 - get all parents
+     * $level = n - get n levels of parents start from $this level
      *
      * @param int $level
      * @param string $joinType
@@ -84,6 +86,8 @@ trait LtreeQueryTrait
 
     /**
      * Join childrens
+     * $level = 0 - get all childrens
+     * $level = n - get n levels of childrens start from $this level
      *
      * @param int $level
      * @param string $joinType
