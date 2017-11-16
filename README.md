@@ -130,10 +130,15 @@ $model->before($anotherModel);
 
 /**
  * Get Tree
- * Input fields:
- * ['category_attribute1' => 'model_attribute1', 'model_attribute2', 'category_attribute3' => function ($category) { return $category->attribute3; } ]
  *
  * @param array $fields
+ * Fields to output:
+ * [
+ *  'category_attribute1' => 'model_attribute1',
+ *  'model_attribute2',
+ *  'category_attribute3' => function ($category) { return $category->attribute3; }
+ * ]
+ *
  * @param array $scopes
  * @return array
  */
@@ -172,7 +177,7 @@ Model::find()->root();
  *
  * @param string $path
  * @param boolean $recursive DEFAULT true
- * If $recursive == true then get all $models starts from $path(with all childrens)
+ * If $recursive == true then get all models where path field value starts from $path(with all childrens)
  * 
  * @return ActiveQuery
  */
