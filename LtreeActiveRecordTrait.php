@@ -208,7 +208,7 @@ trait LtreeActiveRecordTrait
     /**
      * Move/insert $category into $this to the start
      *
-     * @param $category
+     * @param self $category
      * @return bool
      */
     public function prepend(self $category): bool
@@ -299,7 +299,7 @@ trait LtreeActiveRecordTrait
     /**
      * Move/insert $category before $this
      *
-     * @param $category
+     * @param self $category
      * @return bool
      */
     public function before(self $category):bool
