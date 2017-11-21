@@ -14,9 +14,9 @@
 			"email": "krolik@yandex.ru"
 		}
 	],
-    "require": {
-	"php": ">=7.0",
-        "yiisoft/yii2": "*"
+	"require": {
+		"php": ">=7.0",
+        	"yiisoft/yii2": "*"
 	},
 	"autoload": {
 		"psr-4": {
