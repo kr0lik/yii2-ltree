@@ -64,7 +64,7 @@ $model->isFirstLevel();
  * $level = n - get n level childs
  * @return ActiveQuery
  */
-$model->getChildrens(0);
+$model->getChildrens($level);
 
 /**
  * Get parents of $model
@@ -74,7 +74,7 @@ $model->getChildrens(0);
  * $level = n - get n level parents
  * @return ActiveQuery
  */
-$model->getParents(0);
+$model->getParents($level);
 
 /**
  * Get Next categories of $model in $model level
@@ -82,7 +82,7 @@ $model->getParents(0);
  * @param int $count
  * @return ActiveQuery
  */
-$model->getNext(0);
+$model->getNext($count);
 
 /**
  * Get Previous categories of $model in $model level
@@ -90,7 +90,7 @@ $model->getNext(0);
  * @param int $count
  * @return ActiveQuery
  */
-$model->getPrevious(0);
+$model->getPrevious($count);
 
 /**
  * Remove $this from db
@@ -193,7 +193,7 @@ Model::find()->byPath('0001.0001', false);
  * @param string $joinType DEFAULT 'LEFT JOIN'
  * @return ActiveQuery
  */
-Model::find()>joinParents(0, 'LEFT JOIN');
+Model::find()>joinParents($level, 'LEFT JOIN');
 
 /**
  * Join childrens
@@ -204,5 +204,5 @@ Model::find()>joinParents(0, 'LEFT JOIN');
  * @param string $joinType DEFAULT 'LEFT JOIN'
  * @return ActiveQuery
  */
-Model::find()->joinChildrens(0, 'LEFT JOIN');
+Model::find()->joinChildrens($level, 'LEFT JOIN');
 ```
