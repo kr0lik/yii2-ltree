@@ -26,6 +26,8 @@ Required fileds in model: id, name, path.
 
 Lenght of each part ltree path = 4, root path = '0001'.
 
+Extension ltree must be instaled with schema public.
+
 
 
 Add \kr0lik\ltree\LtreeActiveRecordTrait to your ActiveRecord
