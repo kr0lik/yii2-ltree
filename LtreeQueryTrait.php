@@ -13,7 +13,7 @@ trait LtreeQueryTrait
     private $pathName = 'path';
     
     /**
-     * Name of schema ltree extension instaled
+     * Name of schema where ltree extension installed
      *
      * @var string
      */
