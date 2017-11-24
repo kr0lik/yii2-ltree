@@ -11,6 +11,13 @@ trait LtreeQueryTrait
      * @var string
      */
     private $pathName = 'path';
+    
+    /**
+     * Name of schema ltree extension instaled
+     *
+     * @var string
+     */
+    private $schema = 'public';
 
     /**
      * Sort by path
@@ -32,7 +39,7 @@ trait LtreeQueryTrait
     public function notRoot()
     {
         $tb = $this->getPrimaryTableName();
-        return $this->andWhere(['>', "nlevel($tb.path)", 1]);
+        return $this->andWhere(['>', "{$this->schema}.nlevel($tb.path)", 1]);
     }
 
     /**
@@ -43,7 +50,7 @@ trait LtreeQueryTrait
     public function root()
     {
         $tb = $this->getPrimaryTableName();
-        return $this->andWhere(["nlevel($tb.path)" => 1]);
+        return $this->andWhere(["{$this->schema}.nlevel($tb.path)" => 1]);
     }
 
     /**
@@ -57,7 +64,7 @@ trait LtreeQueryTrait
     public function byPath($path, $recursive = true)
     {
         $tb = $this->getPrimaryTableName();
-        return $this->andWhere([$recursive ? '<@' : '=', "$tb.path", $path]);
+        return $this->andWhere([$recursive ? "operator({$this->schema}.<@)" : '=', "$tb.path", $path]);
     }
 
     /**
@@ -74,7 +81,7 @@ trait LtreeQueryTrait
         $tb = $this->getPrimaryTableName();
         return $this->joinWith(['parents' => function ($query) use ($level, $tb) {
             $query->from(['parents' => $tb])
-                ->onCondition(['@>', new Expression("\"parents\".{$this->pathName}"), new Expression("$tb.{$this->pathName}")])
+                ->onCondition(["operator({$this->schema}.@>)", new Expression("\"parents\".{$this->pathName}"), new Expression("$tb.{$this->pathName}")])
                 ->andOnCondition(['<>', new Expression("\"parents\".{$this->pathName}"), new Expression("$tb.{$this->pathName}")])
                 ->where(false);
 
@@ -98,7 +105,7 @@ trait LtreeQueryTrait
         $tb = $this->getPrimaryTableName();
         return $this->joinWith(['childrens' => function ($query) use ($level, $tb) {
             $query->from(['childrens' => $tb])
-                ->onCondition(['<@', new Expression("\"childrens\".{$this->pathName}"), new Expression("$tb.{$this->pathName}")])
+                ->onCondition(["operator({$this->schema}.<@)", new Expression("\"childrens\".{$this->pathName}"), new Expression("$tb.{$this->pathName}")])
                 ->andOnCondition(['<>', new Expression("\"childrens\".{$this->pathName}"), new Expression("$tb.{$this->pathName}")])
                 ->where(false);
 
