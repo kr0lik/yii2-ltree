@@ -64,7 +64,7 @@ trait LtreeQueryTrait
     public function byPath($path, $recursive = true)
     {
         $tb = $this->getPrimaryTableName();
-        return $this->andWhere([$recursive ? "operator({$this->schema}.<@)" : '=', "$tb.path", $path]);
+        return $this->andWhere([$recursive ? "operator({$this->schema}.<@)" : "operator({$this->schema}.=)", "$tb.path", $path]);
     }
 
     /**
@@ -82,12 +82,12 @@ trait LtreeQueryTrait
         return $this->joinWith(['parents' => function ($query) use ($level, $tb) {
             $query->from(['parents' => $tb])
                 ->onCondition(["operator({$this->schema}.@>)", new Expression("\"parents\".{$this->pathName}"), new Expression("$tb.{$this->pathName}")])
-                ->andOnCondition(['<>', new Expression("\"parents\".{$this->pathName}"), new Expression("$tb.{$this->pathName}")])
+                ->andOnCondition(["operator({$this->schema}.<>)", new Expression("\"parents\".{$this->pathName}"), new Expression("$tb.{$this->pathName}")])
                 ->where(false);
 
             $query->link = [];
 
-            if ($level) $query->andOnCondition(['>=', new Expression("nlevel(\"parents\".{$this->pathName})"),  new Expression("nlevel($tb.{$this->pathName}) - :level")], ['level' => $level]);
+            if ($level) $query->andOnCondition(["operator({$this->schema}.>=)", new Expression("nlevel(\"parents\".{$this->pathName})"),  new Expression("nlevel($tb.{$this->pathName}) - :level")], ['level' => $level]);
         }], false, $joinType);
     }
 
@@ -106,12 +106,12 @@ trait LtreeQueryTrait
         return $this->joinWith(['childrens' => function ($query) use ($level, $tb) {
             $query->from(['childrens' => $tb])
                 ->onCondition(["operator({$this->schema}.<@)", new Expression("\"childrens\".{$this->pathName}"), new Expression("$tb.{$this->pathName}")])
-                ->andOnCondition(['<>', new Expression("\"childrens\".{$this->pathName}"), new Expression("$tb.{$this->pathName}")])
+                ->andOnCondition(["operator({$this->schema}.<>)", new Expression("\"childrens\".{$this->pathName}"), new Expression("$tb.{$this->pathName}")])
                 ->where(false);
 
             $query->link = [];
 
-            if ($level) $query->andOnCondition(['>=', new Expression("nlevel(\"childrens\".{$this->pathName})"),  new Expression("nlevel($tb.{$this->pathName}) + :level")], ['level' => $level]);
+            if ($level) $query->andOnCondition(["operator({$this->schema}.>=)", new Expression("nlevel(\"childrens\".{$this->pathName})"),  new Expression("nlevel($tb.{$this->pathName}) + :level")], ['level' => $level]);
         }], false, $joinType);
     }
 }
