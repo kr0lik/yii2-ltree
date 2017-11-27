@@ -87,7 +87,7 @@ trait LtreeQueryTrait
 
             $query->link = [];
 
-            if ($level) $query->andOnCondition(["operator({$this->schema}.>=)", new Expression("nlevel(\"parents\".{$this->pathName})"),  new Expression("nlevel($tb.{$this->pathName}) - :level")], ['level' => $level]);
+            if ($level) $query->andOnCondition(["operator({$this->schema}.>=)", new Expression("{$this->schema}.nlevel(\"parents\".{$this->pathName})"),  new Expression("{$this->schema}.nlevel($tb.{$this->pathName}) - :level")], ['level' => $level]);
         }], false, $joinType);
     }
 
@@ -111,7 +111,7 @@ trait LtreeQueryTrait
 
             $query->link = [];
 
-            if ($level) $query->andOnCondition(["operator({$this->schema}.>=)", new Expression("nlevel(\"childrens\".{$this->pathName})"),  new Expression("nlevel($tb.{$this->pathName}) + :level")], ['level' => $level]);
+            if ($level) $query->andOnCondition(["operator({$this->schema}.>=)", new Expression("{$this->schema}.nlevel(\"childrens\".{$this->pathName})"),  new Expression("{$this->schema}.nlevel($tb.{$this->pathName}) + :level")], ['level' => $level]);
         }], false, $joinType);
     }
 }
