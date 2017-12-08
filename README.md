@@ -61,7 +61,7 @@ $model->isFirstLevel();
 /**
  * Get childrens of $model
  *
- * @param int $level
+ * @param int $level DEFAULT 0
  * $level = 0 - get all childs
  * $level = n - get n level childs
  * @return ActiveQuery
@@ -71,7 +71,7 @@ $model->getChildrens($level);
 /**
  * Get parents of $model
  *
- * @param int $level
+ * @param int $level DEFAULT 0
  * $level = 0 - get all parents
  * $level = n - get n level parents
  * @return ActiveQuery
@@ -81,7 +81,7 @@ $model->getParents($level);
 /**
  * Get Next categories of $model in $model level
  *
- * @param int $count
+ * @param int $count DEFAULT 0
  * @return ActiveQuery
  */
 $model->getNext($count);
@@ -89,7 +89,7 @@ $model->getNext($count);
 /**
  * Get Previous categories of $model in $model level
  *
- * @param int $count
+ * @param int $count DEFAULT 0
  * @return ActiveQuery
  */
 $model->getPrevious($count);
@@ -136,17 +136,17 @@ $model->before($anotherModel);
 /**
  * Get Tree
  *
- * @param array $fields
+ * @param array $fields DEFAULT ['id', 'name']
  * Example fields to output:
  * [
  *  'category_attribute1' => 'model_attribute1',
  *  'model_attribute2',
  *  'category_attribute3' => function ($category) { return $category->attribute3; }
  * ]
- * @param array $scopes
+ * @param array $scopes DEFAULT ['active']
  * @return array
  */
-$model->getTree(['id', 'name'], ['active']);
+$model->getTree($fields, $scopes);
 ```
 
 Add \kr0lik\ltree\LtreeQueryTrait to your ActiveQuery
@@ -160,7 +160,7 @@ Available methods:
  * @param int $sort DEFAULT SORT_ASC
  * @return ActiveQuery
  */
-Model::find()->sorted(SORT_ASC);
+Model::find()->sorted($sort);
 
 /**
  * Get all without root
@@ -184,7 +184,7 @@ Model::find()->root();
  * If $recursive == true then get all models where path field value starts from $path(with all childrens)
  * @return ActiveQuery
  */
-Model::find()->byPath('0001.0001', false);
+Model::find()->byPath($path, $recursive);
 
 /**
  * Join parents
@@ -195,7 +195,7 @@ Model::find()->byPath('0001.0001', false);
  * @param string $joinType DEFAULT 'LEFT JOIN'
  * @return ActiveQuery
  */
-Model::find()>joinParents(0, 'LEFT JOIN');
+Model::find()>joinParents($level, $joinType);
 
 /**
  * Join childrens
@@ -206,5 +206,5 @@ Model::find()>joinParents(0, 'LEFT JOIN');
  * @param string $joinType DEFAULT 'LEFT JOIN'
  * @return ActiveQuery
  */
-Model::find()->joinChildrens(0, 'LEFT JOIN');
+Model::find()->joinChildrens($level, $joinType);
 ```
