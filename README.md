@@ -195,7 +195,7 @@ Model::find()->byPath('0001.0001', false);
  * @param string $joinType DEFAULT 'LEFT JOIN'
  * @return ActiveQuery
  */
-Model::find()>joinParents($level, 'LEFT JOIN');
+Model::find()>joinParents(0, 'LEFT JOIN');
 
 /**
  * Join childrens
@@ -206,5 +206,5 @@ Model::find()>joinParents($level, 'LEFT JOIN');
  * @param string $joinType DEFAULT 'LEFT JOIN'
  * @return ActiveQuery
  */
-Model::find()->joinChildrens($level, 'LEFT JOIN');
+Model::find()->joinChildrens(0, 'LEFT JOIN');
 ```
