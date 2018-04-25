@@ -9,13 +9,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-composer require --prefer-dist kr0lik/yii2-ltree "dev-master"
+composer require --prefer-dist kr0lik/yii2-ltree "*"
 ```
 
 or add
 
 ```
-"kr0lik/yii2-ltree": "dev-master"
+"kr0lik/yii2-ltree": "*"
 ```
 
 to the require section of your `composer.json` file.
