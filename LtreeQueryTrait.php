@@ -28,7 +28,7 @@ trait LtreeQueryTrait
     public function sorted($sort = SORT_ASC)
     {
         $tb = $this->getPrimaryTableName();
-        return $this->orderBy(["$tb.path" => $sort]);
+        return $this->orderBy(["$tb.{$this->pathName}" => $sort]);
     }
 
     /**
@@ -39,7 +39,7 @@ trait LtreeQueryTrait
     public function notRoot()
     {
         $tb = $this->getPrimaryTableName();
-        return $this->andWhere(['>', "{$this->schema}.nlevel($tb.path)", 1]);
+        return $this->andWhere(['>', "{$this->schema}.nlevel($tb.{$this->pathName})", 1]);
     }
 
     /**
@@ -50,7 +50,7 @@ trait LtreeQueryTrait
     public function root()
     {
         $tb = $this->getPrimaryTableName();
-        return $this->andWhere(["{$this->schema}.nlevel($tb.path)" => 1]);
+        return $this->andWhere(["{$this->schema}.nlevel($tb.{$this->pathName})" => 1]);
     }
 
     /**
@@ -64,7 +64,19 @@ trait LtreeQueryTrait
     public function byPath($path, $recursive = true)
     {
         $tb = $this->getPrimaryTableName();
-        return $this->andWhere([$recursive ? "operator({$this->schema}.<@)" : "operator({$this->schema}.=)", "$tb.path", $path]);
+        return $this->andWhere([$recursive ? "operator({$this->schema}.<@)" : "operator({$this->schema}.=)", "$tb.{$this->pathName}", $path]);
+    }
+    
+    /**
+     * Not equal path
+     * @param string $path
+     *
+     * @return ActiveQuery
+     */
+    public function not($path)
+    {
+        $tb = $this->getPrimaryTableName();
+        return $this->andWhere(["operator({$this->schema}.<>)", "$tb.{$this->pathName}", $path]);
     }
 
     /**
