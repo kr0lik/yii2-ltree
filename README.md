@@ -187,6 +187,14 @@ Model::find()->root();
 Model::find()->byPath($path, $recursive);
 
 /**
+ * Get not equal path
+ *
+ * @param string $path
+ * @return ActiveQuery
+ */
+Model::find()->not($path);
+
+/**
  * Join parents
  *
  * @param int $level DEFAULT 0
