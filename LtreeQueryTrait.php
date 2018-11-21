@@ -142,7 +142,7 @@ trait LtreeQueryTrait
      * Set end level
      *
      * @param int $level
-     * @return mixed
+     * @return ActiveQuery
      */
     public function endLevel(int $level)
     {
