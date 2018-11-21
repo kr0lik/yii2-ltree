@@ -402,6 +402,8 @@ trait LtreeActiveRecordTrait
                             foreach ($tmpTree[$level-1] as $parent_path => $parent_data) {
                                 if ($path > $parent_path && strpos($path, $parent_path) !== false) { // && $data->count > 0
                                     $tmpTree[$level-1][$parent_path]->children[] = $data;
+                                } else {
+                                    $tmpTree[$level-1][$parent_path]->children = [];
                                 }
                             }
                         }
