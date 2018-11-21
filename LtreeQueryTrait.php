@@ -126,4 +126,26 @@ trait LtreeQueryTrait
             if ($level) $query->andOnCondition([">=", new Expression("{$this->schema}.nlevel(\"childrens\".{$this->pathName})"),  new Expression("{$this->schema}.nlevel($tb.{$this->pathName}) + :level")], ['level' => $level]);
         }], false, $joinType);
     }
+    
+    /**
+     * Set start level
+     *
+     * @param int $level
+     * @return ActiveQuery
+     */
+    public function startLevel(int $level)
+    {
+        return $this->andWhere([">=", new Expression("{$this->schema}.nlevel({$this->getPrimaryTableName()}.{$this->pathName})"),  $level]);
+    }
+
+    /**
+     * Set end level
+     *
+     * @param int $level
+     * @return mixed
+     */
+    public function endLevel(int $level)
+    {
+        return $this->andWhere(["<=", new Expression("{$this->schema}.nlevel({$this->getPrimaryTableName()}.{$this->pathName})"),  $level]);
+    }
 }
