@@ -137,13 +137,15 @@ $model->before($anotherModel);
  * Get Tree
  *
  * @param array $fields DEFAULT ['id', 'name']
- * Example fields to output:
+ * Example fields can be passed:
  * [
  *  'category_attribute1' => 'model_attribute1',
  *  'model_attribute2',
  *  'category_attribute3' => function ($category) { return $category->attribute3; }
  * ]
- * @param array $scopes DEFAULT ['active']
+ * @param array $scopes
+ * Example scopes can be passed:
+ * ['scope1', 'scope2' => $arg]
  * @return array
  */
 $model->getTree($fields, $scopes);
@@ -215,4 +217,20 @@ Model::find()>joinParents($level, $joinType);
  * @return ActiveQuery
  */
 Model::find()->joinChildrens($level, $joinType);
+
+/**
+ * Set start level
+ *
+ * @param int $level
+ * @return ActiveQuery
+ */
+Model::find()->startLevel($level);
+
+/**
+* Set end level
+*
+* @param int $level
+* @return ActiveQuery
+*/
+Model::find()->endLevel($level);
 ```
