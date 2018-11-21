@@ -348,12 +348,15 @@ trait LtreeActiveRecordTrait
 
     /**
      * Get Tree
-     * Example fields to output:
+     * Example fields can be passed:
      * [
      *  'category_attribute1' => 'model_attribute1',
      *  'model_attribute2',
      *  'category_attribute3' => function ($category) { return $category->attribute3; }
      * ]
+     *
+     * Example scopes can be passed:
+     * ['scope1', 'scope2' => $arg]
      *
      * @param array $fields
      * @param array $scopes
@@ -364,7 +367,11 @@ trait LtreeActiveRecordTrait
         $query = self::find()->sorted();
 
         foreach ($scopes as $scope) {
-            $query->$scope();
+            if (is_string($key)) {
+                $query->$key($value);
+            } else {
+                $query->$value();
+            }
         }
 
         $categories = $query->all();
