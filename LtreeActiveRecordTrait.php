@@ -356,6 +356,7 @@ trait LtreeActiveRecordTrait
      * ]
      *
      * @param array $fields
+     * @param array $scopes
      * @return array
      */
     public static function getTree(array $fields = ['id', 'name'], array $scopes = []): array
