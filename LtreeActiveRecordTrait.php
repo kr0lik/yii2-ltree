@@ -70,8 +70,8 @@ trait LtreeActiveRecordTrait
      */
     public function getChildrens(int $level = 0): ActiveQuery
     {
-        $tb = self::tableName();
-        $query = self::find()
+        $tb = static::tableName();
+        $query = static::find()
             ->where(["operator({$this->schema}.<@)", "$tb.{$this->pathName}", $this->{$this->pathName}])
             ->andWhere(["operator({$this->schema}.<>)", "$tb.{$this->pathName}", $this->{$this->pathName}]);
 
@@ -93,8 +93,8 @@ trait LtreeActiveRecordTrait
      */
     public function getParents(int $level = 0): ActiveQuery
     {
-        $tb = self::tableName();
-        $query = self::find()
+        $tb = static::tableName();
+        $query = static::find()
             ->where(["operator({$this->schema}.@>)", "$tb.{$this->pathName}", $this->{$this->pathName}])
             ->andWhere(["operator({$this->schema}.<>)", "$tb.{$this->pathName}", $this->{$this->pathName}]);
 
@@ -113,8 +113,8 @@ trait LtreeActiveRecordTrait
      */
     public function getNext(int $count = 0): ActiveQuery
     {
-        $tb = self::tableName();
-        return self::find()
+        $tb = static::tableName();
+        return static::find()
             ->where(["operator({$this->schema}.>)", "$tb.{$this->pathName}", $this->{$this->pathName}])
             ->andWhere(["operator({$this->schema}.~)", "$tb.{$this->pathName}", $this->generatePathParent() ? $this->generatePathParent() . '.*' : '*'])
             ->andWhere(['=', "{$this->schema}.nlevel($tb.{$this->pathName})", $this->level() + 1])
@@ -130,8 +130,8 @@ trait LtreeActiveRecordTrait
      */
     public function getPrevious(int $count = 0): ActiveQuery
     {
-        $tb = self::tableName();
-        return self::find()
+        $tb = static::tableName();
+        return static::find()
             ->where(["operator({$this->schema}.<)", "$tb.{$this->pathName}", $this->{$this->pathName}])
             ->andWhere(["operator({$this->schema}.~)", "$tb.{$this->pathName}", $this->generatePathParent() ? $this->generatePathParent() . '.*' : '*'])
             ->andWhere(['=', "{$this->schema}.nlevel($tb.{$this->pathName})", $this->level() + 1])
@@ -189,12 +189,12 @@ trait LtreeActiveRecordTrait
                 $success = $category->save();
 
                 if ($success && $targetFirstChildrenId) {
-                    $targetFirstChildren = self::findOne($targetFirstChildrenId);
+                    $targetFirstChildren = static::findOne($targetFirstChildrenId);
                     $success = $targetFirstChildren->changeStartPartPath($hitPath);
                 }
 
                 if ($success && $targetNextCategoryId) {
-                    $targetNextCategory = self::findOne($targetNextCategoryId);
+                    $targetNextCategory = static::findOne($targetNextCategoryId);
                     $success = $targetNextCategory->afterMoveOutOctantDown();
                 }
 
@@ -235,12 +235,12 @@ trait LtreeActiveRecordTrait
                 $success = $category->save();
 
                 if ($success && $targetFirstChildrenId) {
-                    $targetFirstChildren = self::findOne($targetFirstChildrenId);
+                    $targetFirstChildren = static::findOne($targetFirstChildrenId);
                     $success = $targetFirstChildren->changeStartPartPath($hitPath);
                 }
 
                 if ($success && $targetNextCategoryId) {
-                    $targetNextCategory = self::findOne($targetNextCategoryId);
+                    $targetNextCategory = static::findOne($targetNextCategoryId);
                     $success = $targetNextCategory->afterMoveOutOctantDown();
                 }
 
@@ -280,12 +280,12 @@ trait LtreeActiveRecordTrait
                 $success = $category->save();
 
                 if ($success && $targetFirstChildrenId) {
-                    $targetFirstChildren = self::findOne($targetFirstChildrenId);
+                    $targetFirstChildren = static::findOne($targetFirstChildrenId);
                     $success = $targetFirstChildren->changeStartPartPath($nextPath);
                 }
 
                 if ($success && $targetNextCategoryId) {
-                    $targetNextCategory = self::findOne($targetNextCategoryId);
+                    $targetNextCategory = static::findOne($targetNextCategoryId);
                     $success = $targetNextCategory->afterMoveOutOctantDown();
                 }
 
@@ -323,12 +323,12 @@ trait LtreeActiveRecordTrait
                 $success = $category->save();
 
                 if ($success && $targetFirstChildrenId) {
-                    $targetFirstChildren = self::findOne($targetFirstChildrenId);
+                    $targetFirstChildren = static::findOne($targetFirstChildrenId);
                     $success = $targetFirstChildren->changeStartPartPath($hitPath);
                 }
 
                 if ($success && $targetNextCategoryId) {
-                    $targetNextCategory = self::findOne($targetNextCategoryId);
+                    $targetNextCategory = static::findOne($targetNextCategoryId);
                     $success = $targetNextCategory->afterMoveOutOctantDown();
                 }
 
@@ -364,7 +364,7 @@ trait LtreeActiveRecordTrait
      */
     public static function getTree(array $fields = ['id', 'name'], array $scopes = []): array
     {
-        $query = self::find()->sorted();
+        $query = static::find()->sorted();
 
         foreach ($scopes as $scope) {
             if (is_string($key)) {
@@ -375,7 +375,7 @@ trait LtreeActiveRecordTrait
         }
 
         $categories = $query->all();
-        $pathName = (new self())->pathName;
+        $pathName = (new static())->pathName;
 
         $tmpTree = [];
         foreach ($categories as $category) {
@@ -429,7 +429,7 @@ trait LtreeActiveRecordTrait
      */
     protected function beforeMoveInOctantUp(bool $include = true): bool
     {
-        $tb = self::tableName();
+        $tb = static::tableName();
         $op = $include ? "operator({$this->schema}.>=)" : "operator({$this->schema}.>)";
 
         return Yii::$app->db->createCommand(
@@ -453,7 +453,7 @@ trait LtreeActiveRecordTrait
      */
     protected function afterMoveOutOctantDown(bool $include = true): bool
     {
-        $tb = self::tableName();
+        $tb = static::tableName();
         $op = $include ? "operator({$this->schema}.>=)" : "operator({$this->schema}.>)";
 
         return Yii::$app->db->createCommand(
@@ -477,7 +477,7 @@ trait LtreeActiveRecordTrait
      */
     protected function changeStartPartPath(string $path): bool
     {
-        $tb = self::tableName();
+        $tb = static::tableName();
 
         $transaction = Yii::$app->db->beginTransaction();
         try {
