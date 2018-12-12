@@ -81,7 +81,7 @@ $model->getParents($level);
 /**
  * Get Next categories of $model in $model level
  *
- * @param int $count DEFAULT 0
+ * @param int $count DEFAULT -1 \\ all
  * @return ActiveQuery
  */
 $model->getNext($count);
@@ -89,7 +89,7 @@ $model->getNext($count);
 /**
  * Get Previous categories of $model in $model level
  *
- * @param int $count DEFAULT 0
+ * @param int $count DEFAULT -1 \\ all
  * @return ActiveQuery
  */
 $model->getPrevious($count);
@@ -97,7 +97,7 @@ $model->getPrevious($count);
 /**
  * Get categories in $this level
  *
- * @param int $count
+ * @param int $count DEFAULT -1 \\ all
  * @return ActiveQuery
  */
  $model->getNearest($count);
