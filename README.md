@@ -95,6 +95,14 @@ $model->getNext($count);
 $model->getPrevious($count);
 
 /**
+ * Get categories in $this level
+ *
+ * @param int $count
+ * @return ActiveQuery
+ */
+ $model->getNearest($count);
+
+/**
  * Remove $this from db
  *
  * @return bool
@@ -149,6 +157,20 @@ $model->before($anotherModel);
  * @return array
  */
 $model->getTree($fields, $scopes);
+
+/**
+ * Generate parent path of $this category
+ *
+ * @return string
+ */
+$model->generatePathParent()
+
+/**
+ * Generate path after $this category
+ *
+ * @return string
+ */
+$model->generatePathNext()
 ```
 
 Add \kr0lik\ltree\LtreeQueryTrait to your ActiveQuery
@@ -233,4 +255,12 @@ Model::find()->startLevel($level);
 * @return ActiveQuery
 */
 Model::find()->endLevel($level);
+
+/**
+ * Set current level
+ *
+ * @param int $level
+ * @return ActiveQuery
+ */
+Model::find()->onLevel($level)
 ```
