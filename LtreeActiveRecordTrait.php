@@ -111,7 +111,7 @@ trait LtreeActiveRecordTrait
      * @param int $count
      * @return ActiveQuery
      */
-    public function getNext(int $count = 0): ActiveQuery
+    public function getNext(int $count = -1): ActiveQuery
     {
         $tb = static::tableName();
         return static::find()
@@ -128,7 +128,7 @@ trait LtreeActiveRecordTrait
      * @param int $count
      * @return ActiveQuery
      */
-    public function getPrevious(int $count = 0): ActiveQuery
+    public function getPrevious(int $count = -1): ActiveQuery
     {
         $tb = static::tableName();
         return static::find()
@@ -145,7 +145,7 @@ trait LtreeActiveRecordTrait
      * @param int $count
      * @return ActiveQuery
      */
-    public function getNearest(int $count = 0): ActiveQuery
+    public function getNearest(int $count = -1): ActiveQuery
     {
         $tb = static::tableName();
         return static::find()
@@ -153,7 +153,7 @@ trait LtreeActiveRecordTrait
             ->onLevel($this->level() + 1)
             ->limit($count)
             ->not($this->{$this->pathName})
-            ->sorted(SORT_DESC);
+            ->sorted();
     }
 
     /**
