@@ -257,7 +257,7 @@ Model::find()->startLevel($level);
 Model::find()->endLevel($level);
 
 /**
- * Set current level
+ * Set level
  *
  * @param int $level
  * @return ActiveQuery
