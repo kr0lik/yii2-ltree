@@ -73,10 +73,10 @@ trait LtreeActiveRecordTrait
         $tb = static::tableName();
         $query = static::find()
             ->where(["operator({$this->schema}.<@)", "$tb.{$this->pathName}", $this->{$this->pathName}])
-            ->andWhere(["operator({$this->schema}.<>)", "$tb.{$this->pathName}", $this->{$this->pathName}]);
+            ->not($this->{$this->pathName});
 
         if ($level) {
-            $query->andWhere(['<=', "{$this->schema}.nlevel($tb.{$this->pathName})", $this->level() + $level + 1]);
+            $query->endLevel($this->level() + $level + 1);
         }
 
         return $query;
@@ -96,10 +96,10 @@ trait LtreeActiveRecordTrait
         $tb = static::tableName();
         $query = static::find()
             ->where(["operator({$this->schema}.@>)", "$tb.{$this->pathName}", $this->{$this->pathName}])
-            ->andWhere(["operator({$this->schema}.<>)", "$tb.{$this->pathName}", $this->{$this->pathName}]);
+            ->not($this->{$this->pathName});
 
         if ($level) {
-            $query->andWhere(['>=', "{$this->schema}.nlevel($tb.{$this->pathName})", $this->level() - $level + 1]);
+            $query->startLevel($this->level() - $level + 1);
         }
 
         return $query;
@@ -117,7 +117,7 @@ trait LtreeActiveRecordTrait
         return static::find()
             ->where(["operator({$this->schema}.>)", "$tb.{$this->pathName}", $this->{$this->pathName}])
             ->andWhere(["operator({$this->schema}.~)", "$tb.{$this->pathName}", $this->generatePathParent() ? $this->generatePathParent() . '.*' : '*'])
-            ->andWhere(['=', "{$this->schema}.nlevel($tb.{$this->pathName})", $this->level() + 1])
+            ->onLevel($this->level() + 1)
             ->limit($count)
             ->sorted();
     }
@@ -134,7 +134,7 @@ trait LtreeActiveRecordTrait
         return static::find()
             ->where(["operator({$this->schema}.<)", "$tb.{$this->pathName}", $this->{$this->pathName}])
             ->andWhere(["operator({$this->schema}.~)", "$tb.{$this->pathName}", $this->generatePathParent() ? $this->generatePathParent() . '.*' : '*'])
-            ->andWhere(['=', "{$this->schema}.nlevel($tb.{$this->pathName})", $this->level() + 1])
+            ->onLevel($this->level() + 1)
             ->limit($count)
             ->sorted(SORT_DESC);
     }
@@ -150,7 +150,7 @@ trait LtreeActiveRecordTrait
         $tb = static::tableName();
         return static::find()
             ->andWhere(["operator({$this->schema}.~)", "$tb.{$this->pathName}", $this->generatePathParent() ? $this->generatePathParent() . '.*' : '*'])
-            ->andWhere(['=', "{$this->schema}.nlevel($tb.{$this->pathName})", $this->level() + 1])
+            ->onLevel($this->level() + 1)
             ->limit($count)
             ->not($this->{$this->pathName})
             ->sorted(SORT_DESC);
