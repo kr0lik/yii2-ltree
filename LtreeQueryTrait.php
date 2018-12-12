@@ -150,7 +150,7 @@ trait LtreeQueryTrait
     }
 
     /**
-     * Set current level
+     * Set level
      *
      * @param int $level
      * @return ActiveQuery
