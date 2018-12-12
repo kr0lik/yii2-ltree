@@ -140,9 +140,27 @@ trait LtreeActiveRecordTrait
     }
 
     /**
+     * Get categories in $this level
+     *
+     * @param int $count
+     * @return ActiveQuery
+     */
+    public function getNearest(int $count = 0): ActiveQuery
+    {
+        $tb = static::tableName();
+        return static::find()
+            ->andWhere(["operator({$this->schema}.~)", "$tb.{$this->pathName}", $this->generatePathParent() ? $this->generatePathParent() . '.*' : '*'])
+            ->andWhere(['=', "{$this->schema}.nlevel($tb.{$this->pathName})", $this->level() + 1])
+            ->limit($count)
+            ->not($this->{$this->pathName})
+            ->sorted(SORT_DESC);
+    }
+
+    /**
      * Remove $this from db
      *
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function delete(): bool
     {
@@ -173,6 +191,7 @@ trait LtreeActiveRecordTrait
      *
      * @param self $category
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function append(self $category): bool
     {
@@ -217,6 +236,7 @@ trait LtreeActiveRecordTrait
      *
      * @param self $category
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function prepend(self $category): bool
     {
@@ -263,6 +283,7 @@ trait LtreeActiveRecordTrait
      *
      * @param self $category
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function after(self $category): bool
     {
@@ -308,8 +329,9 @@ trait LtreeActiveRecordTrait
      *
      * @param self $category
      * @return bool
+     * @throws \yii\db\Exception
      */
-    public function before(self $category):bool
+    public function before(self $category): bool
     {
         if ($hitPath = $this->{$this->pathName}) {
             $targetNextCategoryId = $category->{$this->pathName} ? $category->getNext(1)->select('id')->asArray()->scalar() : null;
@@ -366,7 +388,7 @@ trait LtreeActiveRecordTrait
     {
         $query = static::find()->sorted();
 
-        foreach ($scopes as $scope) {
+        foreach ($scopes as $key => $value) {
             if (is_string($key)) {
                 $query->$key($value);
             } else {
@@ -388,6 +410,7 @@ trait LtreeActiveRecordTrait
                     $data->$k = $category->$v;
                 }
             }
+            $data->children = [];
 
             $tmpTree[$category->level()][$category->$pathName] = $data;
         }
@@ -400,10 +423,8 @@ trait LtreeActiveRecordTrait
                     if ($level > min(array_keys($tmpTree))) {
                         if (isset($tmpTree[$level-1])) {
                             foreach ($tmpTree[$level-1] as $parent_path => $parent_data) {
-                                if ($path > $parent_path && strpos($path, $parent_path) !== false) { // && $data->count > 0
+                                if ($path > $parent_path && strpos($path, $parent_path) !== false) {
                                     $tmpTree[$level-1][$parent_path]->children[] = $data;
-                                } else {
-                                    $tmpTree[$level-1][$parent_path]->children = [];
                                 }
                             }
                         }
@@ -510,7 +531,7 @@ trait LtreeActiveRecordTrait
      *
      * @return string
      */
-    protected function generatePathParent(): string
+    public function generatePathParent(): string
     {
         return implode('.', array_slice(explode('.', $this->{$this->pathName}), 0, $this->level()));
     }
@@ -520,7 +541,7 @@ trait LtreeActiveRecordTrait
      *
      * @return string
      */
-    protected function generatePathNext(): string
+    public function generatePathNext(): string
     {
         return  ($this->generatePathParent() ? "{$this->generatePathParent()}." : '') . sprintf("%0{$this->pathPartLen}d", ltrim(explode('.', $this->{$this->pathName})[$this->level()], '0') + 1);
     }
