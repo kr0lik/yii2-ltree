@@ -81,7 +81,7 @@ $model->getParents($level);
 /**
  * Get Next categories of $model in $model level
  *
- * @param int $count DEFAULT -1 \\ all
+ * @param int $count DEFAULT 0
  * @return ActiveQuery
  */
 $model->getNext($count);
@@ -89,18 +89,10 @@ $model->getNext($count);
 /**
  * Get Previous categories of $model in $model level
  *
- * @param int $count DEFAULT -1 \\ all
+ * @param int $count DEFAULT 0
  * @return ActiveQuery
  */
 $model->getPrevious($count);
-
-/**
- * Get categories in $this level
- *
- * @param int $count DEFAULT -1 \\ all
- * @return ActiveQuery
- */
- $model->getNearest($count);
 
 /**
  * Remove $this from db
@@ -145,32 +137,16 @@ $model->before($anotherModel);
  * Get Tree
  *
  * @param array $fields DEFAULT ['id', 'name']
- * Example fields can be passed:
+ * Example fields to output:
  * [
  *  'category_attribute1' => 'model_attribute1',
  *  'model_attribute2',
  *  'category_attribute3' => function ($category) { return $category->attribute3; }
  * ]
- * @param array $scopes
- * Example scopes can be passed:
- * ['scope1', 'scope2' => $arg]
+ * @param array $scopes DEFAULT ['active']
  * @return array
  */
 $model->getTree($fields, $scopes);
-
-/**
- * Generate parent path of $this category
- *
- * @return string
- */
-$model->generatePathParent()
-
-/**
- * Generate path after $this category
- *
- * @return string
- */
-$model->generatePathNext()
 ```
 
 Add \kr0lik\ltree\LtreeQueryTrait to your ActiveQuery
@@ -239,28 +215,4 @@ Model::find()>joinParents($level, $joinType);
  * @return ActiveQuery
  */
 Model::find()->joinChildrens($level, $joinType);
-
-/**
- * Set start level
- *
- * @param int $level
- * @return ActiveQuery
- */
-Model::find()->startLevel($level);
-
-/**
-* Set end level
-*
-* @param int $level
-* @return ActiveQuery
-*/
-Model::find()->endLevel($level);
-
-/**
- * Set level
- *
- * @param int $level
- * @return ActiveQuery
- */
-Model::find()->onLevel($level)
 ```
