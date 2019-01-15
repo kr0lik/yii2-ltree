@@ -3,6 +3,7 @@ namespace kr0lik\ltree;
 
 use Yii;
 use yii\db\ActiveQuery;
+use yii\db\Exception;
 
 trait LtreeActiveRecordTrait
 {
@@ -26,6 +27,13 @@ trait LtreeActiveRecordTrait
      * @var string
      */
     private $schema = 'public';
+
+    /**
+     * Children will be added there in getTree function
+     *
+     * @var array
+     */
+    public $children = [];
 
     /**
      * Get level of $this category starts from 0
@@ -189,7 +197,7 @@ trait LtreeActiveRecordTrait
     /**
      * Move/insert $category into $this to the end
      *
-     * @param self $category
+     * @param self
      * @return bool
      * @throws \yii\db\Exception
      */
@@ -234,7 +242,7 @@ trait LtreeActiveRecordTrait
     /**
      * Move/insert $category into $this to the start
      *
-     * @param self $category
+     * @param self
      * @return bool
      * @throws \yii\db\Exception
      */
@@ -281,7 +289,7 @@ trait LtreeActiveRecordTrait
     /**
      * Move/insert $category after $this
      *
-     * @param self $category
+     * @param self
      * @return bool
      * @throws \yii\db\Exception
      */
@@ -327,7 +335,7 @@ trait LtreeActiveRecordTrait
     /**
      * Move/insert $category before $this
      *
-     * @param self $category
+     * @param self
      * @return bool
      * @throws \yii\db\Exception
      */
@@ -370,22 +378,28 @@ trait LtreeActiveRecordTrait
 
     /**
      * Get Tree
-     * Example fields can be passed:
+     * If $fields is array - will return stdObject of passed fields:
      * [
      *  'category_attribute1' => 'model_attribute1',
      *  'model_attribute2',
      *  'category_attribute3' => function ($category) { return $category->attribute3; }
      * ]
+     * IF $fields is false - will return array of models
      *
      * Example scopes can be passed:
      * ['scope1', 'scope2' => $arg]
      *
-     * @param array $fields
+     * @param mixed $fields
      * @param array $scopes
      * @return array
+     * @throws \Exception
      */
-    public static function getTree(array $fields = ['id', 'name'], array $scopes = []): array
+    public static function getTree($fields = ['id', 'name'], array $scopes = []): array
     {
+        if (! is_array($fields) && $fields !== false) {
+            throw new \Exception('Fields must be array or false');
+        }
+
         $query = static::find()->sorted();
 
         foreach ($scopes as $key => $value) {
@@ -401,16 +415,20 @@ trait LtreeActiveRecordTrait
 
         $tmpTree = [];
         foreach ($categories as $category) {
-            $data = new \stdClass();
-            foreach ($fields as $k => $v) {
-                if (is_callable($v)) {
-                    $data->$k = $v($category);
-                } else {
-                    $k = is_string($k) ? $k : $v;
-                    $data->$k = $category->$v;
+            if (is_array($fields)) {
+                $data = new \stdClass();
+                foreach ($fields as $k => $v) {
+                    if (is_callable($v)) {
+                        $data->$k = $v($category);
+                    } else {
+                        $k = is_string($k) ? $k : $v;
+                        $data->$k = $category->$v;
+                    }
                 }
+                $data->children = [];
+            } else {
+                $data = $category;
             }
-            $data->children = [];
 
             $tmpTree[$category->level()][$category->$pathName] = $data;
         }
@@ -447,6 +465,7 @@ trait LtreeActiveRecordTrait
      *
      * @param bool $include
      * @return bool
+     * @throws Exception
      */
     protected function beforeMoveInOctantUp(bool $include = true): bool
     {
@@ -471,6 +490,7 @@ trait LtreeActiveRecordTrait
      *
      * @param bool $include
      * @return bool
+     * @throws Exception
      */
     protected function afterMoveOutOctantDown(bool $include = true): bool
     {
@@ -495,6 +515,7 @@ trait LtreeActiveRecordTrait
      *
      * @param string $path
      * @return bool
+     * @throws Exception
      */
     protected function changeStartPartPath(string $path): bool
     {
