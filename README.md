@@ -9,7 +9,7 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-composer require --prefer-dist kr0lik/yii2-ltree "*"
+composer require --prefer-dist kr0lik/yii2-ltree
 ```
 
 or add
@@ -22,12 +22,11 @@ to the require section of your `composer.json` file.
 
 Usage
 -----
-Required fileds in model: id, name, path.
+Required fileds in model: id, path.
 
 Lenght of each part ltree path = 4, root path = '0001'.
 
 Extension ltree must be instaled with schema public.
-
 
 
 Add \kr0lik\ltree\LtreeActiveRecordTrait to your ActiveRecord
@@ -36,27 +35,26 @@ Available methods:
 
 ```php
 /**
- * Get level of $model
- * 0 - is root
- * -1 - cant get level
- *
- * @return int
+ * Get path of $model
  */
-$model->level();
+$model->getLPath(): string
+
+/**
+ * Get level of $model
+ * retutn 1 - is root
+ * retutn 0 - cant get level
+ */
+$model->getLevel(): int;
 
 /**
  * Check if $model is root(0 level)
- *
- * @return bool
  */
-$model->isRoot();
+$model->isRoot(): bool;
 
 /**
  * Check if $model is first level(After Root)
- *
- * @return bool
  */
-$model->isFirstLevel();
+$model->isFirstLevel(): bool;
 
 /**
  * Get childrens of $model
@@ -64,9 +62,8 @@ $model->isFirstLevel();
  * @param int $level DEFAULT 0
  * $level = 0 - get all childs
  * $level = n - get n level childs
- * @return ActiveQuery
  */
-$model->getChildrens($level);
+$model->getChildrens($level): ActiveQuery;
 
 /**
  * Get parents of $model
@@ -74,105 +71,63 @@ $model->getChildrens($level);
  * @param int $level DEFAULT 0
  * $level = 0 - get all parents
  * $level = n - get n level parents
- * @return ActiveQuery
  */
-$model->getParents($level);
+$model->getParents($level): ActiveQuery;
 
 /**
  * Get Next categories of $model in $model level
- *
- * @param int $count DEFAULT 0
- * @return ActiveQuery
  */
-$model->getNext($count);
+$model->getNext(): ActiveQuery;
 
 /**
  * Get Previous categories of $model in $model level
+ */
+$model->getPrevious(): ActiveQuery;
+
+/**
+ * Get categories in $model level
  *
- * @param int $count DEFAULT 0
  * @return ActiveQuery
  */
-$model->getPrevious($count);
+$model->getNearest(): ActiveQuery;
 
 /**
- * Get categories in $this level
- *
- * @param int $count
- * @return ActiveQuery
+ * Remove $model from db
  */
-$model->getNearest($count = -1);
+$model->delete(): bool;
 
 /**
- * Remove $this from db
- *
- * @return bool
- */
-$model->delete();
-
-/**
- * Move/insert $anotherModel into $model to the end
+ * Move/insert $model into $anotherModel to the end
  *
  * @param self $anotherModel
- * @return bool
  */
-$model->append($anotherModel);
+$model->appendTo($anotherModel): void;
 
 /**
- * Move/insert $anotherModel into $model to the start
+ * Move/insert $model into $anotherModel to the start
  *
  * @param self $anotherModel
- * @return bool
  */
-$model->prepend($anotherModel);
+$model->prependTo($anotherModel): void;
 
 /**
- * Move/insert $anotherModel after $model
+ * Move/insert $model after $anotherModel
  *
  * @param self $anotherModel
- * @return bool
  */
-$model->after($anotherModel);
+$model->after($anotherModel): void;
 
 /**
- * Move/insert $anotherModel before $model
+ * Move/insert $model before $anotherModel
  *
  * @param self $anotherModel
- * @return bool
  */
-$model->before($anotherModel);
+$model->before($anotherModel): void;
 
 /**
- * Get Tree
- * If $fields is array - will return stdObject of passed fields:
- * [
- *  'category_attribute1' => 'model_attribute1',
- *  'model_attribute2',
- *  'category_attribute3' => function ($category) { return $category->attribute3; }
- * ]
- * IF $fields is false - will return array of models
- *
- * Example scopes can be passed:
- * ['scope1', 'scope2' => $arg]
- *
- * @param mixed $fields
- * @param array $scopes
- * @return array
+ * Save $model as root
  */
-$model->getTree($fields, $scopes);
-
-/**
- * Generate parent path of $this category
- *
- * @return string
- */
-$model->generatePathParent();
-
-/**
- * Generate path after $this category
- *
- * @return string
- */
-$model->generatePathNext();
+$model->makeRoot(): void
 ```
 
 Add \kr0lik\ltree\LtreeQueryTrait to your ActiveQuery
@@ -184,23 +139,18 @@ Available methods:
  * Sort by path
  * 
  * @param int $sort DEFAULT SORT_ASC
- * @return ActiveQuery
  */
-Model::find()->sorted($sort);
+Model::find()->sorted($sort): ActiveQuery;
 
 /**
  * Get all without root
- *
- * @return ActiveQuery
  */
-Model::find()->notRoot();
+Model::find()->notRoot(): ActiveQuery;
 
 /**
  * Get root only
- *
- * @return ActiveQuery
  */
-Model::find()->root();
+Model::find()->root(): ActiveQuery;
 
 /**
  * Get models by $path
@@ -208,17 +158,15 @@ Model::find()->root();
  * @param string $path
  * @param boolean $recursive DEFAULT true
  * If $recursive == true then get all models where path field value starts from $path(with all childrens)
- * @return ActiveQuery
  */
-Model::find()->byPath($path, $recursive);
+Model::find()->byPath($path, $recursive): ActiveQuery;
 
 /**
  * Get not equal path
  *
  * @param string $path
- * @return ActiveQuery
  */
-Model::find()->not($path);
+Model::find()->not($path): ActiveQuery;
 
 /**
  * Join parents
@@ -227,9 +175,8 @@ Model::find()->not($path);
  * $level = 0 - get all parents
  * $level = n - get n levels of parents start from $this level
  * @param string $joinType DEFAULT 'LEFT JOIN'
- * @return ActiveQuery
  */
-Model::find()>joinParents($level, $joinType);
+Model::find()>joinParents($level, $joinType): ActiveQuery;
 
 /**
  * Join childrens
@@ -238,31 +185,34 @@ Model::find()>joinParents($level, $joinType);
  * $level = 0 - get all childrens
  * $level = n - get n levels of childrens start from $this level
  * @param string $joinType DEFAULT 'LEFT JOIN'
- * @return ActiveQuery
  */
-Model::find()->joinChildrens($level, $joinType);
+Model::find()->joinChildrens($level, $joinType): ActiveQuery;
 
 /**
  * Set start level
  *
  * @param int $level
- * @return ActiveQuery
  */
-Model::find()->startLevel($level);
+Model::find()->startLevel($level): ActiveQuery;
 
 /**
  * Set end level
  *
  * @param int $level
- * @return ActiveQuery
  */
-Model::find()->endLevel($level);
+Model::find()->endLevel($level): ActiveQuery;
  
 /**
  * Set level
  *
  * @param int $level
- * @return ActiveQuery
  */
-Model::find()->onLevel($level);
+Model::find()->level($level): ActiveQuery;
+
+/**
+ * Get all as tree
+ *
+ * @return array<int, mixed>
+ */
+Model::find()->tree(): array;
 ```

@@ -19,7 +19,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"kr0lik\\ltree\\": ""
+			"kr0lik\\ltree\\": "src/"
 		}
 	}
 }
