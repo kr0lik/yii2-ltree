@@ -340,7 +340,7 @@ trait LtreeActiveRecordTrait
         }
 
         if ($targetNextId) {
-            /** @var self $targetNex */
+            /** @var self $targetNext */
             $targetNext = static::findOne($targetNextId);
             if (!PathHelper::moveOctantsDown(static::tableName(), $this->ltreePathField, $targetNext->getLPath())) {
                 throw new LtreeProcessException('Target next models not updated.');
