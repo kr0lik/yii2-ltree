@@ -22,7 +22,7 @@ to the require section of your `composer.json` file.
 
 Usage
 -----
-Required fileds in model: id, path.
+Required `id` field in model.
 
 Extension ltree must be instaled with schema `public`.
 You can change it by changing static property `Ql::$ltreeSchema`
