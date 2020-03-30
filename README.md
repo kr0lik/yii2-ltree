@@ -24,10 +24,11 @@ Usage
 -----
 Required fileds in model: id, path.
 
-Lenght of each part ltree path = 4, root path = '0001'.
+Extension ltree must be instaled with schema `public`.
+You can change it by changing static property `Ql::$ltreeSchema`
 
-Extension ltree must be instaled with schema public.
-
+By default path field in table must be named as `lpath`
+You can change it by changing property `ltreePathField` in traits
 
 Add \kr0lik\ltree\LtreeActiveRecordTrait to your ActiveRecord
 
