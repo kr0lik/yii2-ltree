@@ -347,7 +347,7 @@ trait LtreeActiveRecordTrait
     private function saveLPath(self $model, string $hitPath, ?int $targetFirstChildrenId = null, ?int $targetNextId = null): void
     {
         $model->{$this->ltreePathField} = $hitPath;
-        if (!($model->validate([$this->ltreePathField]) && $model->update(false, [$this->ltreePathField]))) {
+        if (!$model->save()) {
             throw new LtreeModelSaveException($model->getErrors(), 'Target model not saved.');
         }
 
