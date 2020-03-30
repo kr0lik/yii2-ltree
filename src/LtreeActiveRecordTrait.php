@@ -60,21 +60,17 @@ trait LtreeActiveRecordTrait
      */
     public function getChildrens(int $level = 0): ActiveQuery
     {
-        $query = static::find();
+        $query = static::find()->where([
+            new Expression(Ql::operator('<@')),
+            new Expression(Ql::pathField(static::tableName(), $this->ltreePathField)),
+            $this->getLPath()
+        ])->not($this->getLPath());
 
-        if (!$this->isNewRecord) {
-            $query->where([
-                new Expression(Ql::operator('<@')),
-                new Expression(Ql::pathField(static::tableName(), $this->ltreePathField)),
-                $this->getLPath()
-            ])->not($this->getLPath());
-
-            if ($level) {
-                $query->endLevel($this->getLevel() + $level);
-            }
+        if ($level) {
+            $query->endLevel($this->getLevel() + $level);
         }
 
-        return $query;
+         return $query;
     }
 
     /**
@@ -83,18 +79,14 @@ trait LtreeActiveRecordTrait
      */
     public function getParents(int $level = 0): ActiveQuery
     {
-        $query = static::find();
+        $query = static::find()->where([
+            new Expression(Ql::operator('@>')),
+            new Expression(Ql::pathField(static::tableName(), $this->ltreePathField)),
+            $this->getLPath()
+        ])->not($this->getLPath());
 
-        if (!$this->isNewRecord) {
-            $query->where([
-                new Expression(Ql::operator('@>')),
-                new Expression(Ql::pathField(static::tableName(), $this->ltreePathField)),
-                $this->getLPath()
-            ])->not($this->getLPath());
-
-            if ($level) {
-                $query->startLevel($this->getLevel() - $level);
-            }
+        if ($level) {
+            $query->startLevel($this->getLevel() - $level);
         }
 
         return $query;
@@ -105,20 +97,16 @@ trait LtreeActiveRecordTrait
      */
     public function getNext(): ActiveQuery
     {
-        $query = static::find();
-
-        if (!$this->isNewRecord) {
-            $query->where([
-                new Expression(Ql::operator('~')),
-                new Expression(Ql::pathField(static::tableName(), $this->ltreePathField)),
-                PathHelper::generateNearLquery($this->getLPath())
-            ])->andWhere([
-                new Expression(Ql::operator('>')),
-                new Expression(Ql::pathField(static::tableName(), $this->ltreePathField)),
-                $this->getLPath()
-            ])->level($this->getLevel())
-                ->sorted();
-        }
+        $query = static::find()->where([
+            new Expression(Ql::operator('~')),
+            new Expression(Ql::pathField(static::tableName(), $this->ltreePathField)),
+            PathHelper::generateNearLquery($this->getLPath())
+        ])->andWhere([
+            new Expression(Ql::operator('>')),
+            new Expression(Ql::pathField(static::tableName(), $this->ltreePathField)),
+            $this->getLPath()
+        ])->level($this->getLevel())
+            ->sorted();
 
         return $query;
     }
@@ -128,20 +116,16 @@ trait LtreeActiveRecordTrait
      */
     public function getPrevious(): ActiveQuery
     {
-        $query = static::find();
-
-        if (!$this->isNewRecord) {
-            $query->where([
-                new Expression(Ql::operator('<')),
-                new Expression(Ql::pathField(static::tableName(), $this->ltreePathField)),
-                $this->getLPath()
-            ])->andWhere([
-                new Expression(Ql::operator('~')),
-                new Expression(Ql::pathField(static::tableName(), $this->ltreePathField)),
-                PathHelper::generateNearLquery($this->getLPath())
-            ])->level($this->getLevel())
-                ->sorted(SORT_DESC);
-        }
+        $query = static::find()->where([
+            new Expression(Ql::operator('<')),
+            new Expression(Ql::pathField(static::tableName(), $this->ltreePathField)),
+            $this->getLPath()
+        ])->andWhere([
+            new Expression(Ql::operator('~')),
+            new Expression(Ql::pathField(static::tableName(), $this->ltreePathField)),
+            PathHelper::generateNearLquery($this->getLPath())
+        ])->level($this->getLevel())
+            ->sorted(SORT_DESC);
 
         return $query;
     }
@@ -151,17 +135,13 @@ trait LtreeActiveRecordTrait
      */
     public function getNearest(): ActiveQuery
     {
-        $query = static::find();
-
-        if (!$this->isNewRecord) {
-            $query->andWhere([
-                new Expression(Ql::operator('~')),
-                new Expression(Ql::pathField(static::tableName(), $this->ltreePathField)),
-                PathHelper::generateNearLquery($this->getLPath())
-            ])->level($this->getLevel())
-                ->not($this->getLPath())
-                ->sorted();
-        }
+        $query = static::find()->andWhere([
+            new Expression(Ql::operator('~')),
+            new Expression(Ql::pathField(static::tableName(), $this->ltreePathField)),
+            PathHelper::generateNearLquery($this->getLPath())
+        ])->level($this->getLevel())
+            ->not($this->getLPath())
+            ->sorted();
 
         return $query;
     }
