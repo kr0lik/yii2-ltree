@@ -307,7 +307,7 @@ trait LtreeActiveRecordTrait
     public function makeRoot(): void
     {
         $lastRootPath = static::find()->root()->sorted(SORT_DESC)->limit(1)->select($this->ltreePathField)->asArray()->scalar();
-        $hitPath = $lastRoot ? PathHelper::generateNextPath($lastRootPath) : PathHelper::generateOctant(1);
+        $hitPath = $lastRootPath ? PathHelper::generateNextPath($lastRootPath) : PathHelper::generateOctant(1);
 
         $targetFirstChildrenId = !$this->isNewRecord ? $this->getChildrens(1)->limit(1)->select('id')->asArray()->scalar() : null;
         $targetNextId = !$this->isNewRecord ? $this->getNext()->limit(1)->select('id')->asArray()->scalar() : null;
