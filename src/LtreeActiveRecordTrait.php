@@ -2,7 +2,7 @@
 namespace kr0lik\ltree;
 
 use kr0lik\ltree\Exception\LtreeHitModelNotExistException;
-use kr0lik\ltree\Exception\LtreeModelSaveException;
+use kr0lik\ltree\Exception\LtreeValidationException;
 use kr0lik\ltree\Exception\LtreeProcessException;
 use Throwable;
 use Yii;
@@ -146,6 +146,9 @@ trait LtreeActiveRecordTrait
         return $query;
     }
 
+    /**
+     * @throws LtreeProcessException
+     */
     public function delete(): bool
     {
         /** @var LtreeActiveRecordTrait $targetNext */
@@ -175,6 +178,9 @@ trait LtreeActiveRecordTrait
 
     /**
      * Move/insert $this into $model to the end
+     *
+     * @throws LtreeProcessException
+     * @throws LtreeValidationException
      */
     public function appendTo(self $model): void
     {
@@ -207,6 +213,9 @@ trait LtreeActiveRecordTrait
 
     /**
      * Move/insert $this into $model to the start
+     *
+     * @throws LtreeProcessException
+     * @throws LtreeValidationException
      */
     public function prependTo(self $model): void
     {
@@ -239,6 +248,9 @@ trait LtreeActiveRecordTrait
 
     /**
      * Move/insert $this after $model
+     *
+     * @throws LtreeProcessException
+     * @throws LtreeValidationException
      */
     public function after(self $model): void
     {
@@ -271,6 +283,9 @@ trait LtreeActiveRecordTrait
 
     /**
      * Move/insert $this before $model
+     *
+     * @throws LtreeProcessException
+     * @throws LtreeValidationException
      */
     public function before(self $model): void
     {
@@ -303,6 +318,9 @@ trait LtreeActiveRecordTrait
 
     /**
      * Save $this as root
+     *
+     * @throws LtreeProcessException
+     * @throws LtreeValidationException
      */
     public function makeRoot(): void
     {
@@ -324,11 +342,15 @@ trait LtreeActiveRecordTrait
         $transaction->commit();
     }
 
+    /**
+     * @throws LtreeProcessException
+     * @throws LtreeValidationException
+     */
     private function saveLPath(self $model, string $hitPath, ?int $targetFirstChildrenId = null, ?int $targetNextId = null): void
     {
         $model->{$this->ltreePathField} = $hitPath;
         if (!$model->save()) {
-            throw new LtreeModelSaveException($model->getErrors(), 'Target model not saved.');
+            throw new LtreeValidationException($model->getErrors());
         }
 
         if ($targetFirstChildrenId) {
