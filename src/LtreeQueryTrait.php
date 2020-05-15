@@ -59,6 +59,22 @@ trait LtreeQueryTrait
             $path
         ]);
     }
+    
+    /**
+     * Closest models on branch
+     */
+    public function closest(string $path): ActiveQuery
+    {
+        return $this->andWhere([
+            new Expression(Ql::operator('~')),
+            new Expression(Ql::pathField($this->getPrimaryTableName(), $this->ltreePathField)),
+            PathHelper::generateNearLquery($path),
+        ])->andWhere([
+            '<=',
+            new Expression(Ql::nlevel($this->getPrimaryTableName(), $this->ltreePathField)),
+            PathHelper::getlevel($path),
+        ]);
+    }
 
     /**
      * Join parents

@@ -170,6 +170,13 @@ Model::find()->byPath($path, $recursive): ActiveQuery;
 Model::find()->not($path): ActiveQuery;
 
 /**
+ * Get closest models on branch
+ *
+ * @param string $path
+ */
+Model::find()->closest($path): ActiveQuery;
+
+/**
  * Join parents
  *
  * @param int $level DEFAULT 0
