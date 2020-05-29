@@ -14,7 +14,7 @@ trait LtreeQueryTrait
     /**
      * Sort by path
      */
-    public function sorted(int $sort = SORT_ASC): ActiveQuery
+    public function sorted(int $sort = SORT_ASC): self
     {
         return $this->orderBy([Ql::pathField($this->getPrimaryTableName(), $this->ltreePathField) => $sort]);
     }
@@ -22,7 +22,7 @@ trait LtreeQueryTrait
     /**
      * Get all without root
      */
-    public function notRoot(): ActiveQuery
+    public function notRoot(): self
     {
         return $this->andWhere(['>', new Expression(Ql::nlevel($this->getPrimaryTableName(), $this->ltreePathField)), 1]);
     }
@@ -30,7 +30,7 @@ trait LtreeQueryTrait
     /**
      * Get root only
      */
-    public function root(): ActiveQuery
+    public function root(): self
     {
         return $this->andWhere(['=', new Expression(Ql::nlevel($this->getPrimaryTableName(), $this->ltreePathField)), 1]);
     }
@@ -39,7 +39,7 @@ trait LtreeQueryTrait
      * Get models by $path
      * If $recursive == true then get all models where path field value starts from $path(with all childrens)
      */
-    public function byPath(string $path, bool $recursive = true): ActiveQuery
+    public function byPath(string $path, bool $recursive = true): self
     {
         return $this->andWhere([
             new Expression(Ql::operator($recursive ? '<@' : '=')),
@@ -51,7 +51,7 @@ trait LtreeQueryTrait
     /**
      * Not equal path
      */
-    public function not(string $path): ActiveQuery
+    public function not(string $path): self
     {
         return $this->andWhere([
             new Expression(Ql::operator('<>')),
@@ -63,7 +63,7 @@ trait LtreeQueryTrait
     /**
      * Closest models on branch
      */
-    public function closest(string $path): ActiveQuery
+    public function closest(string $path): self
     {
         return $this->andWhere([
             new Expression(Ql::operator('~')),
@@ -81,7 +81,7 @@ trait LtreeQueryTrait
      * $level = 0 - get all parents
      * $level = n - get n levels of parents start from $this level
      */
-    public function joinParents(int $level = 0, string $joinType = 'LEFT JOIN'): ActiveQuery
+    public function joinParents(int $level = 0, string $joinType = 'LEFT JOIN'): self
     {
         return $this->joinWith(['parents' => function ($query) use ($level) {
             $query->from(['parents' => $this->getPrimaryTableName()])
@@ -114,7 +114,7 @@ trait LtreeQueryTrait
      * $level = 0 - get all childrens
      * $level = n - get n levels of childrens start from $this level
      */
-    public function joinChildrens(int $level = 0, string $joinType = 'LEFT JOIN'): ActiveQuery
+    public function joinChildrens(int $level = 0, string $joinType = 'LEFT JOIN'): self
     {
         return $this->joinWith(['childrens' => function ($query) use ($level) {
             $query->from(['childrens' => $this->getPrimaryTableName()])
@@ -145,7 +145,7 @@ trait LtreeQueryTrait
     /**
      * Set start level
      */
-    public function startLevel(int $level): ActiveQuery
+    public function startLevel(int $level): self
     {
         return $this->andWhere([
             '>=',
@@ -157,7 +157,7 @@ trait LtreeQueryTrait
     /**
      * Set end level
      */
-    public function endLevel(int $level): ActiveQuery
+    public function endLevel(int $level): self
     {
         return $this->andWhere([
             '<=',
@@ -169,7 +169,7 @@ trait LtreeQueryTrait
     /**
      * Set level
      */
-    public function level(int $level): ActiveQuery
+    public function level(int $level): self
     {
         return $this->andWhere([
             '=',
